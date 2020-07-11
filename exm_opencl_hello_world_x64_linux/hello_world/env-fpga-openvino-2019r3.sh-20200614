@@ -1,0 +1,18 @@
+#!/bin/bash
+
+	#export ALTERAOCLSDKROOT=/home/intel/test/hld
+	export ALTERAOCLSDKROOT=/home/fpga/intelFPGA_pro/19.1/hld
+
+	export INTELFPGAOCLSDKROOT=$ALTERAOCLSDKROOT
+	export AOCL_BOARD_PACKAGE_ROOT=$ALTERAOCLSDKROOT/board/a10_ref
+	# quartus_pgm
+    #export QUARTUS_ROOTDIR=/home/intel/intelFPGA/19.1/qprogrammer
+    #export QUARTUS_ROOTDIR=/home/intel/intelFPGA_pro2/19.1/qprogrammer
+    export QUARTUS_ROOTDIR=/home/fpga/intelFPGA_pro/19.1/qprogrammer/quartus
+	# aoc/aocl, aocl, 
+	#export PATH=$INTELFPGAOCLSDKROOT/bin:$INTELFPGAOCLSDKROOT/host/linux64/bin:$QUARTUS_ROOTDIR/quartus/bin:$QUARTUS_ROOTDIR/quartus/linux64:$PATH
+	export PATH=$INTELFPGAOCLSDKROOT/bin:$INTELFPGAOCLSDKROOT/linux64/bin:$INTELFPGAOCLSDKROOT/host/linux64/bin:$QUARTUS_ROOTDIR/bin:$QUARTUS_ROOTDIR/linux64:/home/intel/intelFPGA/19.1/qprogrammer/linux64/perl/bin:$PATH
+
+	# init_opencl.sh
+	source $ALTERAOCLSDKROOT/init_opencl.sh
+
