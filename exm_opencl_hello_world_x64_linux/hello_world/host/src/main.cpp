@@ -85,7 +85,12 @@ int main() {
   size_t gSize[3] = {work_group_size, 1, 1};
 
   // Launch the kernel
-  status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, gSize, wgSize, 0, NULL, NULL);
+  //status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, gSize, wgSize, 0, NULL, NULL);
+
+  cl_int dims = 2;
+  size_t gs[] = {4,4};
+  size_t ls[] = {2,2};
+  status = clEnqueueNDRangeKernel(queue, kernel, dims, NULL, gs, ls, 0, NULL, NULL);
   checkError(status, "Failed to launch kernel");
 
   // Wait for command queue to complete pending events
@@ -139,7 +144,7 @@ bool init() {
   device = devices[0];
 
   // Display some device information.
-  display_device_info(device);
+  //display_device_info(device);
 
   // Create the context.
   context = clCreateContext(NULL, 1, &device, &oclContextCallback, NULL, &status);

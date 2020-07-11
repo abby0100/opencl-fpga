@@ -24,10 +24,24 @@
 __kernel void hello_world(int thread_id_from_which_to_print_message) {
   // Get index of the work item
   unsigned thread_id = get_global_id(0);
-  printf("[+] Thread #%u\n", thread_id);
 
-  if(thread_id == thread_id_from_which_to_print_message) {
-    printf("Thread #%u: Hello from Altera's OpenCL Compiler!\n", thread_id);
-  }
+  unsigned gid = get_global_id(0);
+  unsigned gid1 = get_global_id(1);
+  unsigned lid = get_local_id(0);
+  unsigned lid1 = get_local_id(1);
+
+  unsigned gpid = get_group_id(0);
+  unsigned gpid1 = get_group_id(1);
+  unsigned gsize = get_global_size(0);
+  unsigned gsize1 = get_global_size(1);
+  unsigned lsize = get_local_size(0);
+  unsigned lsize1 = get_local_size(1);
+
+  printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1);
+  //printf("[+] Thread #%u,\tgid(%d,%d),\tgpid(%d,%d),\tgps(%d,%d)\n", thread_id, gid,gid1, gpid,gpid1, gps,gps1);
+
+  //if(thread_id == thread_id_from_which_to_print_message) {
+  //  printf("Thread #%u, idx #%d: Hello from Altera's OpenCL Compiler!\n", thread_id, gid + gid1);
+  //}
 }
 
