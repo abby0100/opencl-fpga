@@ -44,14 +44,18 @@ __kernel void hello_world(int thread_id_from_which_to_print_message, __global co
   //printf("[+] Thread #%u,\tgid(%d,%d),\tgpid(%d,%d),\tgps(%d,%d)\n", thread_id, gid,gid1, gpid,gpid1, gps,gps1);
   //printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1);
 
-  printf("[Thread #%u]\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f,%f)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[thread_id], db[thread_id]);
+  //printf("[Thread #%u]\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f,%f)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[thread_id], db[thread_id]);
+  //printf("[Thread #%u]\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f,%f)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[gid*colA], db[gid1]);
+  printf("[Thread #%u]\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f,%f)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[gid1*colA], db[gid]);
 
   // matmul
   float sum = 0.0f;
   for(size_t k=0; k<colA; ++k) {
-    sum += da[gid*colA + k] * db[k*colB + gid1];
+    //sum += da[gid*colA + k] * db[k*colB + gid1];
+    sum += da[gid1*colA + k] * db[k*colB + gid];
   }
-  dc[gid*colB + gid1] = sum;
+  //dc[gid*colB + gid1] = sum;
+  dc[gid1*colB + gid] = sum;
 
   return;
 }

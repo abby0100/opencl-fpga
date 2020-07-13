@@ -111,7 +111,7 @@ int main() {
   //status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, gSize, wgSize, 0, NULL, NULL);
 
   //cl_int buffsize = 16;
-  cl_int buffsize = 4;
+  cl_int buffsize = 16;
   cl_int rowA = sqrt(buffsize);
   cl_int colA = rowA;
   cl_int colB = sqrt(buffsize);
@@ -147,7 +147,7 @@ int main() {
 
   cl_int dims = 2;
   cl_int gf = 4;
-  cl_int lf = 1;
+  cl_int lf = 2;
   size_t gs[] = {rowA, colB};
   size_t ls[] = {lf,lf};
 
