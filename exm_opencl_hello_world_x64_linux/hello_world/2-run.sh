@@ -7,3 +7,5 @@
 	make
 	CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=1 ./bin/host
 
+# usage
+# ./2-run.sh

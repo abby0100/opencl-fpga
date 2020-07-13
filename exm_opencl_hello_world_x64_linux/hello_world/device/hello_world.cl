@@ -21,7 +21,7 @@
 
 // AOC kernel demonstrating device-side printf call
 
-__kernel void hello_world(int thread_id_from_which_to_print_message) {
+__kernel void hello_world(int thread_id_from_which_to_print_message, __global const float* restrict da) {
   // Get index of the work item
   unsigned thread_id = get_global_id(0);
 
@@ -37,8 +37,11 @@ __kernel void hello_world(int thread_id_from_which_to_print_message) {
   unsigned lsize = get_local_size(0);
   unsigned lsize1 = get_local_size(1);
 
-  printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1);
   //printf("[+] Thread #%u,\tgid(%d,%d),\tgpid(%d,%d),\tgps(%d,%d)\n", thread_id, gid,gid1, gpid,gpid1, gps,gps1);
+  //printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1);
+
+  //printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f)\n", thread_id, gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[gid*gsize+gid1]);
+  printf("[+] Thread #%u,\tgid(%d,%d),\tlid(%d,%d),\tgpid(%d,%d),\tgsize(%d,%d),\tlsize(%d,%d),\tdata(%f)\n", (gid*gsize+gid1), gid,gid1, lid,lid1, gpid,gpid1, gsize,gsize1, lsize,lsize1, da[gid*gsize+gid1]);
 
   //if(thread_id == thread_id_from_which_to_print_message) {
   //  printf("Thread #%u, idx #%d: Hello from Altera's OpenCL Compiler!\n", thread_id, gid + gid1);

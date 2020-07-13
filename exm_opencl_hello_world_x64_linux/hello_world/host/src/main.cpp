@@ -37,6 +37,8 @@
 #include "CL/opencl.h"
 #include "AOCLUtils/aocl_utils.h"
 
+#include <iostream>
+
 using namespace aocl_utils;
 
 #define STRING_BUFFER_LEN 1024
@@ -65,6 +67,14 @@ static void device_info_bool( cl_device_id device, cl_device_info param, const c
 static void device_info_string( cl_device_id device, cl_device_info param, const char* name);
 static void display_device_info( cl_device_id device );
 
+template <typename T>
+void validateBuff(T* buffer, size_t buffsize) {
+  for(size_t i=0; i<buffsize; ++i) {
+    std::cout << buffer[i] << " ";
+  }
+  std::cout << std::endl;
+}
+
 // Entry point.
 int main() {
   cl_int status;
@@ -87,15 +97,41 @@ int main() {
   // Launch the kernel
   //status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, gSize, wgSize, 0, NULL, NULL);
 
+  cl_int buffsize = 16;
+  float ha[buffsize];
+  for(cl_int i=0; i<buffsize; ++i) {
+    ha[i] = i+1;
+  }
+  validateBuff(ha, buffsize);
+  cl_mem da = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float)*buffsize, ha, &status);
+  status = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*) &da);
+  checkError(status, "Failed to set kernel arg 1");
+
+  //cl_int dims = 1;
+  //size_t gs[] = {buffsize,2};
+  //size_t ls[] = {16,1};
+
   cl_int dims = 2;
-  size_t gs[] = {4,4};
-  size_t ls[] = {2,2};
-  status = clEnqueueNDRangeKernel(queue, kernel, dims, NULL, gs, ls, 0, NULL, NULL);
+  cl_int gf = 4;
+  cl_int lf = 2;
+  size_t gs[] = {buffsize/gf, gf};
+  size_t ls[] = {lf,lf};
+
+  //status = clEnqueueNDRangeKernel(queue, kernel, dims, NULL, gs, ls, 0, NULL, NULL);
+
+  cl_event event;
+  status = clEnqueueNDRangeKernel(queue, kernel, dims, NULL, gs, ls, 0, NULL, &event);
   checkError(status, "Failed to launch kernel");
 
   // Wait for command queue to complete pending events
   status = clFinish(queue);
   checkError(status, "Failed to finish");
+
+  cl_ulong start;
+  cl_ulong end;
+  status = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(start), &start, NULL);
+  status = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(end), &end, NULL);
+  std::cout << "Cost time:\t" << (end - start)/1000 << " ms" << std::endl;
 
   printf("\nKernel execution is complete.\n");
 
