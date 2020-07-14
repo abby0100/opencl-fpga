@@ -42,6 +42,11 @@
 using namespace aocl_utils;
 
 #define STRING_BUFFER_LEN 1024
+//cl_int buffsize = 16;
+cl_int buffsize = 16;
+cl_int rowA = sqrt(buffsize);
+cl_int colA = rowA;
+cl_int colB = sqrt(buffsize);
 
 // Runtime constants
 // Used to define the work set over which this kernel will execute.
@@ -70,12 +75,15 @@ static void display_device_info( cl_device_id device );
 template <typename T>
 void validateBuff(T* buffer, size_t buffsize) {
   for(size_t i=0; i<buffsize; ++i) {
+    if(i % colA == 0)
+      std::cout << std::endl;
     std::cout << buffer[i] << " ";
   }
   std::cout << std::endl;
 }
 template <typename T>
 void checkResults(T* ha, T* hb, size_t rowA, size_t colA, size_t colB) {
+  std::cout << "\ncheckResults:" << std::endl;
   for(size_t i=0; i<rowA; ++i) {
     for(size_t j=0; j<colB; ++j) {
       float sum = 0.0f;
@@ -84,6 +92,7 @@ void checkResults(T* ha, T* hb, size_t rowA, size_t colA, size_t colB) {
       }
       std::cout << sum << " ";
     }
+    std::cout << std::endl;
   }
   std::cout << std::endl;
 }
@@ -110,11 +119,6 @@ int main() {
   // Launch the kernel
   //status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, gSize, wgSize, 0, NULL, NULL);
 
-  //cl_int buffsize = 16;
-  cl_int buffsize = 16;
-  cl_int rowA = sqrt(buffsize);
-  cl_int colA = rowA;
-  cl_int colB = sqrt(buffsize);
   float ha[buffsize];
   float hb[buffsize];
   float hc[buffsize];
@@ -147,10 +151,13 @@ int main() {
 
   cl_int dims = 2;
   cl_int gf = 4;
-  cl_int lf = 2;
-  size_t gs[] = {rowA, colB};
-  size_t ls[] = {lf,lf};
+  cl_int lf = 1;
+  //size_t gs[] = {rowA, colB};
+  //size_t gs[] = {rowA/2, colB/2};
+  //size_t ls[] = {lf,lf};
 
+  size_t gs[] = {rowA,colB};
+  size_t ls[] = {rowA/2, colB/2};
   //status = clEnqueueNDRangeKernel(queue, kernel, dims, NULL, gs, ls, 0, NULL, NULL);
 
   cl_event event;
