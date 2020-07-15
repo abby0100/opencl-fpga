@@ -40,14 +40,14 @@ __kernel void hello_world(int thread_id_from_which_to_print_message, __global co
   for(size_t n=0; n<nblock; ++n) {
     blocka[lrow][lcol] = da[(gprow + lrow)*colA + TILE_DIM * n + lcol];
     blockb[lcol][lrow] = db[(TILE_DIM * n + lrow)*colB + gpcol + lcol];
-    //printf("[Thread #%u] barrier local memory\n", thread_id);
+    printf("[Thread #%u] barrier local memory\n", thread_id);
     barrier(CLK_LOCAL_MEM_FENCE);
 
     for(size_t k=0; k<TILE_DIM; ++k) {
       //printf("[Thread #%u] add(%f,%f)\n", thread_id, blocka[lrow][k], blockb[lcol][k]);
       sum += blocka[lrow][k] * blockb[lcol][k];
     }
-    //printf("[Thread #%u] barrier sum\n", thread_id);
+    printf("[Thread #%u] barrier sum\n", thread_id);
     barrier(CLK_LOCAL_MEM_FENCE);
   }
   dc[(gprow + lrow)*colB + gpcol + lcol] = sum;
